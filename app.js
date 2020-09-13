@@ -23,7 +23,12 @@ router.get('/', async (req, res) => {
   try {
     const response = await axios(config);
     if (response.status === 200) {
-      return res.status(200).send(response.data);
+      const responseObj = {
+        ...response.data,
+        min: 1,
+        max: response.data.num,
+      };
+      return res.status(200).send(responseObj);
     }
     return res.sendStatus(500);
   } catch (error) {
@@ -45,13 +50,20 @@ router.get('/:id', async (req, res) => {
     url: 'https://xkcd.com/info.0.json',
   };
 
+  let max = 1;
   try {
     const response = await axios(config);
     if (response.status === 200) {
+      max = response.data.num;
       if (id > response.data.num) {
         return res.sendStatus(404);
       } if (id == 0) {
-        return res.status(200).send(response.data);
+        const responseObj = {
+          ...response.data,
+          min: 1,
+          max,
+        };
+        return res.status(200).send(responseObj);
       }
     } else {
       return res.sendStatus(500);
@@ -66,7 +78,12 @@ router.get('/:id', async (req, res) => {
   try {
     const response = await axios(config);
     if (response.status === 200) {
-      return res.status(200).send(response.data);
+      const responseObj = {
+        ...response.data,
+        min: 1,
+        max,
+      };
+      return res.status(200).send(responseObj);
     }
     return res.sendStatus(500);
   } catch (error) {
